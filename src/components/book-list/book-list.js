@@ -3,20 +3,23 @@ import BookListItem from '../book-list-item/book-list-item'
 import { connect } from "react-redux";
 import withBookstoreService from '../hoc/with-bookstore-service';
 import {booksLoaded} from '../../actions';
+import Spinner from '../spinner/spinner'
 
 import './book-list.css';
 
 const BookList = (props) => {
-    const {books} = props;
+    const {books, loading} = props;
 
         useEffect(()=>{
-            const {bookstoreService} = props;
-            const data = bookstoreService.getBooks();
-            props.booksLoaded(data)}, []
-        
-            
+            const {bookstoreService, booksLoaded} = props;
+            bookstoreService.getBooks()
+                .then((data)=> {booksLoaded(data)});
+            }, []                    
         );
-
+        
+        if (loading) {
+            return <Spinner/>;
+        }
         return (
             <ul className="book-list">
                 {
@@ -31,8 +34,8 @@ const BookList = (props) => {
    
 };
 
-const mapStateToProps = ({books}) => {
-    return {books};
+const mapStateToProps = ({books, loading}) => {
+    return {books, loading};
 };
 
 const mapDispatchToProps = {
