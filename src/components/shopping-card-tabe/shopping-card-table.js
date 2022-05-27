@@ -24,13 +24,13 @@ const ShoppingCardTable = () => {
                         <td>$40</td>
                         <td>
                             <button className="btn btn-outline-danger btn-sm float-right">
-                                <i className="fa fa-trash-o" />
+                                <div>DEL</div>
                             </button>
                             <button className="btn btn-outline-success btn-sm float-right">
-                                <i className="fa fa-plus-circle" />
+                               <div>PLUS</div> 
                             </button>
                             <button className="btn btn-outline-warning btn-sm float-right">
-                                <i className="fa fa-minus-circle" />
+                                <div>MINUS</div>
                             </button>
                         </td>
                     </tr>
