@@ -8,7 +8,21 @@ import ErrorIndicator from '../error-indicator/error-indicator';
 
 import './book-list.css';
 
-const BookList = (props) => {
+const BookList = ({books}) => {
+    return (
+        <ul className="book-list">
+            {
+                books.map((book) => {
+                    return (
+                        <li key={book.id}><BookListItem book={book}/></li>
+                    );
+                })
+            }
+        </ul>
+    );
+};
+
+const BookListContainer = (props) => {
 
         useEffect(
             ()=>{ props.fetchBooks() }, []                    
@@ -24,18 +38,7 @@ const BookList = (props) => {
             return <ErrorIndicator/>;
         }
 
-        return (
-            <ul className="book-list">
-                {
-                    books.map((book) => {
-                        return (
-                            <li key={book.id}><BookListItem book={book}/></li>
-                        );
-                    })
-                }
-            </ul>
-        );
-   
+        return <BookList books={books}/>
 };
 
 const mapStateToProps = ({books, loading, error}) => {
@@ -50,4 +53,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default withBookstoreService()
-    (connect(mapStateToProps, mapDispatchToProps)(BookList));
+    (connect(mapStateToProps, mapDispatchToProps)(BookListContainer));
