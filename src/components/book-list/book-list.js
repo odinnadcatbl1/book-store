@@ -9,17 +9,13 @@ import ErrorIndicator from '../error-indicator/error-indicator';
 import './book-list.css';
 
 const BookList = (props) => {
-    const {books, loading, error} = props;
 
-        useEffect(()=>{
-            const {bookstoreService, booksLoaded, booksRequested, booksError} = props;
-            booksRequested();
-            bookstoreService.getBooks()
-                .then((data)=> {booksLoaded(data)})
-                .catch((error)=> {booksError(error)});
-            }, []                    
+        useEffect(
+            ()=>{ props.fetchBooks() }, []                    
         );
     
+        const {books, loading, error} = props;
+
         if (loading) {
             return <Spinner/>;
         }
@@ -46,10 +42,16 @@ const mapStateToProps = ({books, loading, error}) => {
     return {books, loading, error};
 };
 
-const mapDispatchToProps = {
-    booksLoaded, 
-    booksRequested,
-    booksError,
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const {bookstoreService} = ownProps; // ownProps - получает свойства от компонента выше по иерархии (здесь от withBookstoreService в connect и далее)
+    return {
+        fetchBooks: () => {
+            dispatch(booksRequested());
+            bookstoreService.getBooks()
+                .then((data)=> {dispatch(booksLoaded(data))})
+                .catch((error)=> {dispatch(booksError(error))});
+        }
+    };
 };
 
 export default withBookstoreService()
