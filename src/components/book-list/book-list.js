@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import BookListItem from '../book-list-item/book-list-item'
 import { connect } from "react-redux";
 import withBookstoreService from '../hoc/with-bookstore-service';
-import {BookAddedToCard, fetchBooks} from '../../actions';
+import {bookAddedToCard, fetchBooks} from '../../actions';
 import Spinner from '../spinner/spinner';
 import ErrorIndicator from '../error-indicator/error-indicator';
 
@@ -53,7 +53,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {bookstoreService} = ownProps; // ownProps - получает свойства от компонента выше по иерархии (здесь от withBookstoreService в connect и далее)
     return {
         fetchBooks: fetchBooks(bookstoreService, dispatch),
-        onAddedToCard: (id) => dispatch(BookAddedToCard(id))
+        onAddedToCard: (id) => dispatch(bookAddedToCard(id))
     };
 };
 
