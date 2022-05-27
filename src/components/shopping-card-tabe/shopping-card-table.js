@@ -1,14 +1,46 @@
 import React from "react";
 import './shopping-card-table.css';
 
-const ShoppingCardTable = () => {
+import { connect } from "react-redux";
+
+
+const ShoppingCardTable = ({items, total, onIncrease, onDecrease, onDelete}) => {
+    const renderRow = (item, idx) => {
+        const {id, name, count, price} = item;
+        return (
+            <tr key={id}>
+                <td>{idx+1}</td>
+                <td>{name}</td>
+                <td>{count}</td>
+                <td>${price}</td>
+                <td>
+                    <button 
+                        className="btn btn-outline-danger btn-sm float-right"
+                        onClick={()=>onDelete(id)}>
+                        <div>DEL</div>
+                    </button>
+                    <button 
+                        className="btn btn-outline-success btn-sm float-right"
+                        onClick={()=>onIncrease(id)}>
+                    <div>PLUS</div> 
+                    </button>
+                    <button 
+                        className="btn btn-outline-warning btn-sm float-right"
+                        onClick={()=>onDecrease(id)}>
+                        <div>MINUS</div>
+                    </button>
+                </td>
+            </tr>
+        );
+    };
+
     return (
         <div className="shopping-card-table">
             <h2>Your order</h2>
             <table className="table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>№</th>
                         <th>Item</th>
                         <th>Count</th>
                         <th>Price</th>
@@ -17,31 +49,36 @@ const ShoppingCardTable = () => {
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Site blahblahblah</td>
-                        <td>2</td>
-                        <td>$40</td>
-                        <td>
-                            <button className="btn btn-outline-danger btn-sm float-right">
-                                <div>DEL</div>
-                            </button>
-                            <button className="btn btn-outline-success btn-sm float-right">
-                               <div>PLUS</div> 
-                            </button>
-                            <button className="btn btn-outline-warning btn-sm float-right">
-                                <div>MINUS</div>
-                            </button>
-                        </td>
-                    </tr>
+                    {items.map(renderRow)}
                 </tbody>
             </table>
 
             <div className="total">
-                Total: $201
+                Total: ${total}
             </div>
         </div>
     );
 };
 
-export default ShoppingCardTable;
+const mapStateToProps = ({cardItems, orderTotal}) => {
+    return {
+        items: cardItems,
+        total: orderTotal
+    };
+};
+
+const mapDispatchToProps = () => {
+    return {
+        onIncrease: (id) => {
+            console.log(`Increase ${id}`);
+        },
+        onDecrease: (id) => {
+            console.log(`Decrease ${id}`);
+        },
+        onDelete: (id) => {
+            console.log(`Delete ${id}`);
+        },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingCardTable);
