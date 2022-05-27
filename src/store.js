@@ -13,7 +13,7 @@ const stringMiddleware = () => (next) => (action) => { //next === dispatch в д
             {type: action}
         );
     }
-    return dispatch(action);
+    return next(action);
 }
 
 
