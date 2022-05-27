@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import BookListItem from '../book-list-item/book-list-item'
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import withBookstoreService from '../hoc/with-bookstore-service';
 import {bookAddedToCard, fetchBooks} from '../../actions';
 import Spinner from '../spinner/spinner';
@@ -51,10 +52,12 @@ const mapStateToProps = ({bookList: {books, loading, error}}) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     const {bookstoreService} = ownProps; // ownProps - получает свойства от компонента выше по иерархии (здесь от withBookstoreService в connect и далее)
-    return {
-        fetchBooks: fetchBooks(bookstoreService, dispatch),
-        onAddedToCard: (id) => dispatch(bookAddedToCard(id))
-    };
+    return bindActionCreators({
+        fetchBooks: fetchBooks(bookstoreService),
+        onAddedToCard: bookAddedToCard
+        // fetchBooks: dispatch(fetchBooks(bookstoreService)()), // использование thunkmiddleware позволило использовать bindactionacreator
+        // onAddedToCard: (id) => dispatch(bookAddedToCard(id))
+    }, dispatch);
 };
 
 export default withBookstoreService()

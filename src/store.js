@@ -1,5 +1,5 @@
 import {createStore, applyMiddleware} from 'redux';
-
+import ThunkMiddleware from 'redux-thunk';
 import reducer from './reducers';
 
 const logMiddleware = (store) => (dispatch) => (action) => {
@@ -17,8 +17,16 @@ const stringMiddleware = () => (next) => (action) => { //next === dispatch в д
 }
 
 
-const store = createStore(reducer, applyMiddleware(stringMiddleware, logMiddleware)); // порядок имеет значение 
+const store = createStore(reducer, applyMiddleware(ThunkMiddleware, stringMiddleware, logMiddleware)); // порядок имеет значение 
 
 store.dispatch('HELLO WORLD'); // обрабатывает обычные строки
+
+const delayedActionCreator = (timeout) => (dispatch) => {
+    setTimeout(()=>dispatch({
+        type: 'DELAYED_ACTION'
+    }), timeout);
+};
+
+store.dispatch(delayedActionCreator(3000)); // благодаря thunkmiddleware может обрабатывать и функции
 
 export default store;
