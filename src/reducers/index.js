@@ -5,11 +5,37 @@ const initialState = {
     error: null,
     cardItems: [],
     orderTotal: 270,
+}; 
+
+const updateCardItems = (cardItems, item, idx) => {
+    if (idx === -1) {
+        return [
+            ...cardItems,
+            item
+        ];
+    }
+
+    return [
+        ...cardItems.slice(0, idx),
+        item,
+        ...cardItems.slice(idx+1),
+    ]
+};
+
+const updateCardItem = (book, item={}) => {
+    const {id=book.id, count=0, title=book.title, price=0} = item;
+    return {
+        id, 
+        title,
+        count: count+1,
+        price: +price + +book.price
+    };
 };
 
 const reducer = (state=initialState, action) => {
 
     switch (action.type) {
+
         case 'FETCH_BOOKS_SUCCESS':
             return {
                 ...state,
@@ -17,6 +43,7 @@ const reducer = (state=initialState, action) => {
                 loading: false,
                 error: null
             };
+
         case 'FETCH_BOOKS_REQUEST': 
             return {
                 ...state,
@@ -24,6 +51,7 @@ const reducer = (state=initialState, action) => {
                 books: [],
                 error: null,
             };
+
         case 'FETCH_BOOKS_FAILURE':
             return {
                 ...state,
@@ -31,23 +59,19 @@ const reducer = (state=initialState, action) => {
                 loading: false, 
                 error: action.payload
             };
+
         case 'BOOK_ADDED_TO_CARD':
             const bookId = action.payload;
             const book = state.books.find((book)=> book.id === bookId);
-            const newItem = {
-                id: bookId,
-                name: book.title,
-                count: 1,
-                price: book.price
-            }
+            const itemIndex = state.cardItems.findIndex(({id}) => id === bookId);
+            const item = state.cardItems[itemIndex];
+            const newItem = updateCardItem(book, item);
             return {
-                ...state,
-                cardItems: [
-                    ...state.cardItems,
-                    newItem
-                ]
-            };
-    }
+                    ...state,
+                    cardItems: updateCardItems(state.cardItems, newItem, itemIndex)
+                };
+          
+    } // switch
     return state;
 };
 

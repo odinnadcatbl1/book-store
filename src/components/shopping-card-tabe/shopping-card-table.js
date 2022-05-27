@@ -6,11 +6,11 @@ import { connect } from "react-redux";
 
 const ShoppingCardTable = ({items, total, onIncrease, onDecrease, onDelete}) => {
     const renderRow = (item, idx) => {
-        const {id, name, count, price} = item;
+        const {id, title, count, price} = item;
         return (
             <tr key={id}>
                 <td>{idx+1}</td>
-                <td>{name}</td>
+                <td>{title}</td>
                 <td>{count}</td>
                 <td>${price}</td>
                 <td>
